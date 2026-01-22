@@ -2,33 +2,71 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <meta name="theme-color" content="#111111" />
   <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href="icons/icon-192.png" />
   <title>オフライン調査（PWA）</title>
+  <style>
+    :root { --bd:#e6e6e6; --mut:#666; }
+    body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans JP", sans-serif; margin:0; padding:12px; background:#fff; color:#111; }
+    .card { border:1px solid var(--bd); border-radius:14px; padding:12px; margin:10px 0; }
+    .row { display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+    button { padding: 10px 14px; border-radius: 12px; border:1px solid #ddd; background:#fff; font-size:15px; cursor:pointer; }
+    button.primary { border-color:#1f6feb; }
+    input[type="file"], textarea { width:100%; font-size:15px; }
+    textarea { min-height:92px; padding:10px; border-radius:12px; border:1px solid #ddd; }
+    .small { color:var(--mut); font-size:13px; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Noto Sans Mono", monospace; }
+    .ok { color:#0a7; } .ng { color:#c00; }
+    .list { max-height: 260px; overflow:auto; }
+    .item { padding: 8px 0; border-bottom: 1px dashed #eee; }
+    .thumb { max-width: 160px; border-radius: 12px; border:1px solid #eee; }
+    .previewBox { display:flex; gap:10px; flex-wrap:wrap; align-items:flex-start; }
+    .previewBox > div { flex:1; min-width:240px; }
+  </style>
 </head>
-<script>
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("sw.js");
-}
-</script>
-
 <body>
   <h2>オフライン調査（PWA）</h2>
+  <div class="small">保存後プレビュー / CSV / 写真+CSV ZIP</div>
 
-  <p>
-    <input id="photo" type="file" accept="image/*" capture="environment">
-  </p>
+  <div class="card">
+    <div class="row">
+      <div style="flex:1">
+        <div class="small">写真</div>
+        <input id="photoInput" type="file" accept="image/*" capture="environment" />
+        <div id="photoInfo" class="small"></div>
+      </div>
+      <div style="flex:1">
+        <div class="small">備考</div>
+        <textarea id="memoInput"></textarea>
+      </div>
+    </div>
 
-  <p>
-    <textarea id="memo" placeholder="備考" rows="4" cols="30"></textarea>
-  </p>
+    <div class="row" style="margin-top:10px;">
+      <button id="btnRecord" class="primary">記録する</button>
+      <button id="btnZip">写真+CSV ZIP</button>
+      <button id="btnRefresh">一覧更新</button>
+      <button id="btnClear">全削除</button>
+    </div>
 
-  <button onclick="record()">記録する</button>
-  <button onclick="exportCSV()">CSV書き出し</button>
+    <div class="card">
+      <div class="small">保存後プレビュー（直近）</div>
+      <img id="savedImg" class="thumb" style="display:none;" />
+      <div class="mono small" id="savedName"></div>
+      <div class="mono small" id="savedLatLon"></div>
+      <div class="small" id="savedMemo"></div>
+    </div>
 
-  <pre id="status"></pre>
+    <div id="status" class="mono small"></div>
+  </div>
 
+  <div class="card">
+    <div class="small">保存件数：<span id="count">0</span></div>
+    <div id="list" class="list"></div>
+  </div>
+
+  <script src="idb.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

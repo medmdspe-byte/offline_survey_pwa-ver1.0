@@ -1,0 +1,7 @@
+self.addEventListener("install", e => {
+  e.waitUntil(
+    caches.open("survey-cache").then(c =>
+      c.addAll(["./", "./index.html", "./app.js", "./manifest.json"])
+    )
+  );
+});

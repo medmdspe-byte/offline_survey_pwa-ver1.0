@@ -1,0 +1,6 @@
+{
+  "name": "オフライン調査",
+  "short_name": "調査PWA",
+  "start_url": "./index.html",
+  "display": "standalone"
+}
